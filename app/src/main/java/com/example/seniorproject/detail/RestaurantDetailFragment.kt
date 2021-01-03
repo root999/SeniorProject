@@ -27,9 +27,11 @@ class RestaurantDetailFragment : Fragment() {
 
         val restaurant = RestaurantDetailFragmentArgs.fromBundle(arguments!!).selectedRestaurant
         val viewModelFactory = DetailViewModelFactory(restaurant, application)
+
+
         binding.viewModel = ViewModelProvider(
             this, viewModelFactory).get(RestaurantDetailViewModel::class.java)
-
+        binding.productList.adapter = ProductListAdapter()
         return binding.root
     }
 }
