@@ -9,8 +9,12 @@ import com.example.seniorproject.databinding.ViewProductItemBinding
 import com.example.seniorproject.databinding.ViewRestaurantItemBinding
 import com.example.seniorproject.network.Product
 import com.example.seniorproject.network.Restaurant
+import com.example.seniorproject.overview.RestaurantGridAdapter
+import kotlinx.android.synthetic.main.fragment_product_detail.view.*
+import kotlinx.android.synthetic.main.view_product_item.view.*
 
-class ProductListAdapter() : ListAdapter<Product,
+class ProductListAdapter(private val onClickProductDetailsListener: OnClickProductDetailsListener
+,private val onClickAddToCartListener: OnClickAddToCartListener) : ListAdapter<Product,
         ProductListAdapter.ProductViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(
@@ -25,8 +29,12 @@ class ProductListAdapter() : ListAdapter<Product,
         holder: ProductListAdapter.ProductViewHolder,
         position: Int
     ) {
-        val restaurant = getItem(position)
-        holder.bind(restaurant)
+        val product = getItem(position)
+        holder.itemView.setOnClickListener{
+            onClickProductDetailsListener.onClick(product)
+        }
+
+        holder.bind(product,onClickAddToCartListener)
     }
     companion object DiffCallback : DiffUtil.ItemCallback<Product>() {
         override fun areItemsTheSame(oldItem: Product, newItem: Product): Boolean {
@@ -40,10 +48,17 @@ class ProductListAdapter() : ListAdapter<Product,
     class ProductViewHolder(private var binding:
                                ViewProductItemBinding):
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(product: Product) {
+        fun bind(product: Product,listener: OnClickAddToCartListener) {
             binding.product = product
+            binding.addToCart =listener
             binding.executePendingBindings()
         }
+    }
+    class OnClickProductDetailsListener(val clickListener: (product: Product) -> Unit) {
+        fun onClick(product:Product) = clickListener(product)
+    }
+    class OnClickAddToCartListener(val clickListener: (product: Product) -> Unit) {
+        fun onClick(product:Product) = clickListener(product)
     }
 
 

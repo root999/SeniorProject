@@ -21,5 +21,27 @@
             android:name="selectedRestaurant"
             app:argType="com.example.seniorproject.network.Restaurant"
             />
+        <action
+            android:id="@+id/action_restaurantDetailFragment_to_productDetailFragment"
+            app:destination="@id/productDetailFragment" />
+        <action
+            android:id="@+id/action_restaurantDetailFragment_to_orderFragment"
+            app:destination="@id/orderFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/productDetailFragment"
+        android:name="com.example.seniorproject.productDetail.ProductDetailFragment"
+        android:label="ProductDetailFragment" >
+        <argument
+            android:name="selectedProduct"
+            app:argType="com.example.seniorproject.network.Product" />
+    </fragment>
+    <fragment
+        android:id="@+id/orderFragment"
+        android:name="com.example.seniorproject.order.OrderFragment"
+        android:label="OrderFragment">
+        <argument
+            android:name="selectedProduct"
+            app:argType="com.example.seniorproject.network.Product" />
     </fragment>
 </navigation>
