@@ -2,13 +2,15 @@ package com.example.seniorproject.network
 
 import com.example.seniorproject.network.CustomerDtos.CustomerInfo
 import com.example.seniorproject.network.CustomerDtos.LoginCustomer
+import com.example.seniorproject.network.CustomerDtos.RegisterCustomer
+import com.example.seniorproject.network.responses.RegisterResponse
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.*
-
+enum class ApiStatus { LOADING, ERROR }
 private const val BASE_URL = "http://127.0.0.1:8000"
 
 private val moshi = Moshi.Builder()
@@ -29,6 +31,8 @@ interface ApiService{
     suspend fun sendOrder()
     @POST("api-token-auth/")
     suspend fun login( @Body customer: LoginCustomer):CustomerInfo
+    @POST("rest-auth/registration/")
+    suspend fun register(@Body customer : RegisterCustomer):RegisterResponse
 }
 object AppApi {
     val retrofitService : ApiService by lazy {

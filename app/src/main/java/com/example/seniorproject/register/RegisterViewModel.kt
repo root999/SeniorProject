@@ -1,4 +1,4 @@
-package com.example.seniorproject.login
+package com.example.seniorproject.register
 
 import android.util.Log
 import android.widget.EditText
@@ -12,37 +12,35 @@ import com.example.seniorproject.network.Customer
 import com.example.seniorproject.network.CustomerDtos.CustomerInfo
 import com.example.seniorproject.network.CustomerDtos.LoginCustomer
 import com.example.seniorproject.network.CustomerDtos.RegisterCustomer
+import com.example.seniorproject.network.responses.RegisterResponse
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
 
-
-class LoginViewModel : ViewModel() {
+class RegisterViewModel : ViewModel() {
     private val _status = MutableLiveData<ApiStatus>()
     val status: LiveData<ApiStatus>
         get() = _status
-    private val _customerInfo = MutableLiveData<CustomerInfo>()
-    val customerInfo: LiveData<CustomerInfo>
-        get() = _customerInfo
+    private val _registerResponse = MutableLiveData<RegisterResponse>()
+    val registerResponse: LiveData<RegisterResponse>
+        get() = _registerResponse
 
-
-    fun login(customer: LoginCustomer) {
+    fun register(customer: RegisterCustomer) {
         viewModelScope.launch {
             try {
-                _customerInfo.value = AppApi.retrofitService.login(customer)
+                _registerResponse.value = AppApi.retrofitService.register(customer)
                 _status.value=ApiStatus.LOADING
-
             } catch (ex: Exception) {
                 print(ex.message)
-                _status.value = ApiStatus.ERROR
+                _status.value=ApiStatus.ERROR
             }
         }
 
     }
 
-    fun loginCompleted() {
-        _customerInfo.value = null
-        _status.value = null
+    fun registerCompleted() {
+        _registerResponse.value = null
+        _status.value=null
     }
 
     init {

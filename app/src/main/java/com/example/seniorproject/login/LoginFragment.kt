@@ -5,15 +5,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.example.seniorproject.R
 import com.example.seniorproject.databinding.FragmentLoginBinding
-import com.example.seniorproject.databinding.FragmentOverviewBinding
+import com.example.seniorproject.network.ApiStatus
 import com.example.seniorproject.network.CustomerDtos.LoginCustomer
-import com.example.seniorproject.overview.OverviewFragmentDirections
-import com.example.seniorproject.overview.OverviewViewModel
-import com.example.seniorproject.overview.RestaurantGridAdapter
+
 
 
 class LoginFragment : Fragment() {
@@ -34,8 +33,34 @@ class LoginFragment : Fragment() {
         binding.ButtonLogin.setOnClickListener{
             val username = binding.UsernameEditText.text.toString().trim()
             val password = binding.PasswordEditText.text.toString().trim()
-            viewModel.login(LoginCustomer(username,password))
+            if (username=="" || password == ""){
+                Toast.makeText(context,"Mail adresinizi veya şifrenizi boş bıraktınız", Toast.LENGTH_LONG).show()
+
+            }
+            else{
+                viewModel.login(LoginCustomer(username,password))
+            }
+
         }
+        binding.ButtonSignUp.setOnClickListener{
+            this.findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToRegisterFragment())
+
+        }
+        viewModel.status.observe(this, Observer {
+            when(it){
+                ApiStatus.ERROR ->{
+                    Toast.makeText(context,"Mail adresiniz veya şifreniz yanlış",Toast.LENGTH_SHORT).show()
+                }
+
+            }
+        })
+        viewModel.customerInfo.observe(this, Observer {
+            if ( null != it ) {
+                this.findNavController().navigate(
+                    LoginFragmentDirections.actionLoginFragmentToOverviewFragment(it))
+                    viewModel.loginCompleted()
+            }
+        })
         return binding.root
     }
 

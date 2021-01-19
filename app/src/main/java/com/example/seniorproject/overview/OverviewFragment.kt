@@ -12,6 +12,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.seniorproject.databinding.FragmentOverviewBinding
 import com.example.seniorproject.databinding.ViewRestaurantItemBinding
+import com.example.seniorproject.productDetail.ProductDetailFragmentArgs
+import com.example.seniorproject.productDetail.ProductDetailViewModel
+import com.example.seniorproject.productDetail.ProductDetailViewModelFactory
 
 /**
  * This fragment shows the the status of the Mars real-estate web services transaction.
@@ -31,17 +34,20 @@ class OverviewFragment : Fragment() {
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        val application = requireNotNull(activity).application
         val binding = FragmentOverviewBinding.inflate(inflater)
 
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
         binding.lifecycleOwner = this
-
+        val loginedCustomer = OverviewFragmentArgs.fromBundle(arguments!!).customer
         // Giving the binding access to the OverviewViewModel
-        binding.viewModel = viewModel
+        val viewModelFactory = OverviewViewModelFactory(loginedCustomer, application)
+        binding.viewModel =  ViewModelProvider(
+            this, viewModelFactory).get(OverviewViewModel::class.java)
         binding.restaurantGrid.adapter = RestaurantGridAdapter(RestaurantGridAdapter.OnClickListener{
             viewModel.displayRestaurantDetails(it)
         })
-        viewModel.navigateToSelectedRestaurant.observe(this, Observer {
+        binding.viewModel?.navigateToSelectedRestaurant?.observe(this, Observer {
             if ( null != it ) {
                 this.findNavController().navigate(
                     OverviewFragmentDirections.actionOverviewFragmentToRestaurantDetailFragment(it))
