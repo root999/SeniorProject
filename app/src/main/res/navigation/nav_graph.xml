@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/overviewFragment">
+    app:startDestination="@id/loginFragment">
 
     <fragment
         android:id="@+id/overviewFragment"
@@ -35,6 +35,9 @@
         <argument
             android:name="selectedProduct"
             app:argType="com.example.seniorproject.network.Product" />
+        <argument
+            android:name="selectedRestaurant"
+            app:argType="com.example.seniorproject.network.Restaurant" />
     </fragment>
     <fragment
         android:id="@+id/orderFragment"
@@ -43,5 +46,12 @@
         <argument
             android:name="selectedProduct"
             app:argType="com.example.seniorproject.network.Product" />
+        <argument
+            android:name="selectedRestaurant"
+            app:argType="com.example.seniorproject.network.Restaurant" />
     </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.seniorproject.login.LoginFragment"
+        android:label="LoginFragment" />
 </navigation>

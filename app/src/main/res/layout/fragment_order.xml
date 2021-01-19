@@ -10,21 +10,68 @@
             type="com.example.seniorproject.order.OrderViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/productNameTextView"
+            android:layout_alignParentTop="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="272dp"
-            android:layout_marginBottom="440dp"
+            tools:text="Mercimek Çorbası"
             android:text="@{viewModel.selectedProduct.name}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_margin="20dp"
+            android:textSize="20sp"/>
+
+        <ImageView
+            android:id="@+id/orderProductImage"
+            android:layout_below="@+id/productNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_launcher_background"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="7dp"
+            android:padding="15dp"/>
+        <TextView
+            android:id="@+id/productDetails"
+            android:layout_below="@+id/orderProductImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Harika bir çorba"
+            android:text="@{viewModel.selectedProduct.details}"
+           android:layout_marginHorizontal="20dp"/>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="30dp">
+            <ImageButton
+                android:id="@+id/productCountUp"
+                android:layout_below="@id/productDetails"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_baseline_add_24"
+                />
+            <TextView
+                android:id="@+id/productCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:layout_centerHorizontal="true"
+              />
+            <ImageButton
+                android:id="@+id/productCountDown"
+                android:layout_below="@id/productDetails"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_baseline_add_24"
+                />
+        </LinearLayout>
+
+
+    </RelativeLayout>
 </layout>

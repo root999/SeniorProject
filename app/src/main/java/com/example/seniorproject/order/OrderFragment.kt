@@ -31,6 +31,7 @@ class OrderFragment : Fragment() {
         binding.lifecycleOwner = this
 
         val product = OrderFragmentArgs.fromBundle(arguments!!).selectedProduct
+        val restaurant = OrderFragmentArgs.fromBundle(arguments!!).selectedRestaurant
         val viewModelFactory = OrderViewModelFactory(product, application)
         binding.viewModel =  ViewModelProvider(
             this, viewModelFactory).get(OrderViewModel::class.java)

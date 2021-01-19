@@ -43,14 +43,14 @@ class RestaurantDetailFragment : Fragment() {
         binding.viewModel?.navigateToSelectedRestaurant?.observe(this, Observer {
             if ( null != it ) {
                 this.findNavController().navigate(
-                    RestaurantDetailFragmentDirections.actionRestaurantDetailFragmentToProductDetailFragment(it))
+                    RestaurantDetailFragmentDirections.actionRestaurantDetailFragmentToProductDetailFragment(it,restaurant))
                 binding.viewModel?.displayProductDetailsCompleted()
             }
         })
         binding.viewModel?.addToCartProduct?.observe(this, Observer {
             if ( null != it ) {
                 this.findNavController().navigate(
-                    RestaurantDetailFragmentDirections.actionRestaurantDetailFragmentToOrderFragment(it))
+                    RestaurantDetailFragmentDirections.actionRestaurantDetailFragmentToOrderFragment(it,restaurant))
                 binding.viewModel?.addProductToCartCompleted()
             }
         })

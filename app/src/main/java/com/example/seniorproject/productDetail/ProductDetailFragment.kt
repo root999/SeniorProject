@@ -31,13 +31,17 @@ class ProductDetailFragment : Fragment() {
         val application = requireNotNull(activity).application
         val binding = FragmentProductDetailBinding.inflate(inflater)
         binding.lifecycleOwner = this
-
         val product = ProductDetailFragmentArgs.fromBundle(arguments!!).selectedProduct
+        val restaurant = ProductDetailFragmentArgs.fromBundle(arguments!!).selectedRestaurant
         val viewModelFactory = ProductDetailViewModelFactory(product, application)
         binding.viewModel =  ViewModelProvider(
             this, viewModelFactory).get(ProductDetailViewModel::class.java)
-
-
+        binding.productCountUp?.setOnClickListener{
+            binding?.viewModel?.increaseProductCount()
+        }
+        binding.productCountDown?.setOnClickListener{
+            binding?.viewModel?.decreaseProductCount()
+        }
         return binding.root
     }
 }
