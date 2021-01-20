@@ -11,3 +11,4 @@ data class CustomerInfo(
     val name :String,
     val surname:String
 ): Parcelable
+

@@ -18,21 +18,16 @@ enum class RestaurantStatus { LOADING, ERROR, DONE }
 /**
  * The [ViewModel] that is attached to the [OverviewFragment].
  */
-class OverviewViewModel(customerInfo: CustomerInfo, app: Application) : AndroidViewModel(app) {
+class OverviewViewModel : ViewModel() {
 
-    private val _customer = MutableLiveData<CustomerInfo>()
-    val customer: LiveData<CustomerInfo>
-        get() = _customer
+//    private val _customer = MutableLiveData<CustomerInfo>()
+//    val customer: LiveData<CustomerInfo>
+//        get() = _customer
     private val _restaurants = MutableLiveData<List<Restaurant>>()
 
 
     val restaurants: LiveData<List<Restaurant>>
         get() = _restaurants
-
-    private val _restaurant = MutableLiveData<Restaurant>()
-
-    val restaurant: LiveData<Restaurant>
-        get() = _restaurant
 
     private val _status = MutableLiveData<RestaurantStatus>()
 
@@ -55,7 +50,7 @@ class OverviewViewModel(customerInfo: CustomerInfo, app: Application) : AndroidV
      * Call getMarsRealEstateProperties() on init so we can display status immediately.
      */
     init {
-        _customer.value = customerInfo
+//        _customer.value = customerInfo
         getRestaurantList()
     }
 

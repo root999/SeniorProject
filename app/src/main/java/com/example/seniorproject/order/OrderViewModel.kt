@@ -4,20 +4,23 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.example.seniorproject.network.Product
 import com.example.seniorproject.network.Restaurant
+import com.example.seniorproject.network.productDtos.ProductInOrder
 
-class OrderViewModel(product: Product, app: Application) : AndroidViewModel(app) {
+class OrderViewModel : ViewModel() {
 
-    private val _selectedProduct = MutableLiveData<Product>()
-
-    val selectedProduct: LiveData<Product>
-        get() = _selectedProduct
-
+    private val _products = MutableLiveData<List<ProductInOrder>>()
+     val products: LiveData<List<ProductInOrder>>
+        get() = _products
 
     init {
-        _selectedProduct.value = product
-    }
 
+    }
+    fun setProducts(products : List<ProductInOrder>){
+       _products.value = products
+
+    }
 
 }

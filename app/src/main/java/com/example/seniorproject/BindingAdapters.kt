@@ -9,7 +9,9 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.seniorproject.detail.ProductListAdapter
 import com.example.seniorproject.network.Product
+import com.example.seniorproject.network.productDtos.ProductInOrder
 import com.example.seniorproject.network.Restaurant
+import com.example.seniorproject.order.OrderAdapter
 import com.example.seniorproject.overview.RestaurantGridAdapter
 import com.example.seniorproject.overview.RestaurantStatus
 
@@ -52,8 +54,14 @@ fun bindRecyclerView(recyclerView: RecyclerView,
 }
 
 @BindingAdapter("productData")
-fun bindProductRecyclerView(recyclerView: RecyclerView,
+fun bindProducRecyclerView(recyclerView: RecyclerView,
                      data: List<Product>?) {
     val adapter = recyclerView.adapter as ProductListAdapter
+    adapter.submitList(data)
+}
+@BindingAdapter("orderData")
+fun bindOrderRecyclerView(recyclerView: RecyclerView,
+                            data: List<ProductInOrder>?) {
+    val adapter = recyclerView.adapter as OrderAdapter
     adapter.submitList(data)
 }

@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.example.seniorproject.SharedViewModel
 import com.example.seniorproject.databinding.FragmentLoginBinding
 import com.example.seniorproject.network.ApiStatus
 import com.example.seniorproject.network.CustomerDtos.LoginCustomer
@@ -20,7 +22,7 @@ class LoginFragment : Fragment() {
     private val viewModel: LoginViewModel by lazy {
         ViewModelProvider(this).get(LoginViewModel::class.java)
     }
-
+    private val sharedViewModel : SharedViewModel by activityViewModels()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val binding = FragmentLoginBinding.inflate(inflater)
@@ -46,7 +48,7 @@ class LoginFragment : Fragment() {
             this.findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToRegisterFragment())
 
         }
-        viewModel.status.observe(this, Observer {
+        viewModel.status.observe(viewLifecycleOwner, Observer {
             when(it){
                 ApiStatus.ERROR ->{
                     Toast.makeText(context,"Mail adresiniz veya şifreniz yanlış",Toast.LENGTH_SHORT).show()
@@ -54,10 +56,11 @@ class LoginFragment : Fragment() {
 
             }
         })
-        viewModel.customerInfo.observe(this, Observer {
+        viewModel.customerInfo.observe(viewLifecycleOwner, Observer {
             if ( null != it ) {
+                sharedViewModel.setCustomerInfo(it)
                 this.findNavController().navigate(
-                    LoginFragmentDirections.actionLoginFragmentToOverviewFragment(it))
+                    LoginFragmentDirections.actionLoginFragmentToOverviewFragment())
                     viewModel.loginCompleted()
             }
         })

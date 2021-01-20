@@ -5,17 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.example.seniorproject.databinding.FragmentOrderBinding
+import com.example.seniorproject.SharedViewModel
 import com.example.seniorproject.databinding.FragmentProductDetailBinding
 
-import com.example.seniorproject.databinding.FragmentRestaurantDetailBinding
 import com.example.seniorproject.detail.*
-import com.example.seniorproject.order.OrderViewModel
-import com.example.seniorproject.order.OrderViewModelFactory
-import com.example.seniorproject.productDetail.ProductDetailFragmentArgs
+import com.example.seniorproject.network.productDtos.ProductInOrder
 
 /**
  * This [Fragment] shows the detailed information about a selected piece of Mars real estate.
@@ -25,22 +22,31 @@ import com.example.seniorproject.productDetail.ProductDetailFragmentArgs
 
 
 class ProductDetailFragment : Fragment() {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    private val sharedViewModel: SharedViewModel by activityViewModels()
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
         val application = requireNotNull(activity).application
         val binding = FragmentProductDetailBinding.inflate(inflater)
         binding.lifecycleOwner = this
-        val product = ProductDetailFragmentArgs.fromBundle(arguments!!).selectedProduct
-        val restaurant = ProductDetailFragmentArgs.fromBundle(arguments!!).selectedRestaurant
+        val product = ProductDetailFragmentArgs.fromBundle(requireArguments()).selectedProduct
         val viewModelFactory = ProductDetailViewModelFactory(product, application)
-        binding.viewModel =  ViewModelProvider(
-            this, viewModelFactory).get(ProductDetailViewModel::class.java)
-        binding.productCountUp?.setOnClickListener{
-            binding?.viewModel?.increaseProductCount()
+        binding.viewModel = ViewModelProvider(
+            this, viewModelFactory
+        ).get(ProductDetailViewModel::class.java)
+        binding.productCountUp.setOnClickListener {
+            binding.viewModel?.increaseProductCount()
         }
-        binding.productCountDown?.setOnClickListener{
-            binding?.viewModel?.decreaseProductCount()
+        binding.productCountDown.setOnClickListener {
+            binding.viewModel?.decreaseProductCount()
+        }
+        binding.addToCartButton.setOnClickListener {
+            val productInOrder = ProductInOrder(product, binding?.viewModel?.productCount?.value!!)
+            sharedViewModel.addProduct(productInOrder)
+            this.findNavController().navigate(ProductDetailFragmentDirections.actionProductDetailFragmentToOrderFragment())
         }
         return binding.root
     }

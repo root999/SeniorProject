@@ -1,18 +1,19 @@
 package com.example.seniorproject.detail
 
 
-
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.example.seniorproject.SharedViewModel
 
 import com.example.seniorproject.databinding.FragmentRestaurantDetailBinding
+import com.example.seniorproject.network.productDtos.ProductInOrder
 
 /**
  * This [Fragment] shows the detailed information about a selected piece of Mars real estate.
@@ -22,35 +23,49 @@ import com.example.seniorproject.databinding.FragmentRestaurantDetailBinding
 
 
 class RestaurantDetailFragment : Fragment() {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+
+
+    private val sharedViewModel: SharedViewModel by activityViewModels()
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
         val application = requireNotNull(activity).application
         val binding = FragmentRestaurantDetailBinding.inflate(inflater)
         binding.lifecycleOwner = this
 
-        val restaurant = RestaurantDetailFragmentArgs.fromBundle(arguments!!).selectedRestaurant
+        val restaurant =
+            RestaurantDetailFragmentArgs.fromBundle(requireArguments()).selectedRestaurant
         val viewModelFactory = DetailViewModelFactory(restaurant, application)
 
 
         binding.viewModel = ViewModelProvider(
-            this, viewModelFactory).get(RestaurantDetailViewModel::class.java)
-        binding.productList.adapter = ProductListAdapter(ProductListAdapter.OnClickProductDetailsListener{
-            binding.viewModel?.displayProductDetails(it)
-        },ProductListAdapter.OnClickAddToCartListener{
-            binding.viewModel?.addProductToCart(it)
-        })
-        binding.viewModel?.navigateToSelectedRestaurant?.observe(this, Observer {
-            if ( null != it ) {
+            this, viewModelFactory
+        ).get(RestaurantDetailViewModel::class.java)
+        binding.productList.adapter =
+            ProductListAdapter(ProductListAdapter.OnClickProductDetailsListener {
+                binding.viewModel?.displayProductDetails(it)
+            }, ProductListAdapter.OnClickAddToCartListener {
+                binding.viewModel?.addProductToCart(it)
+            })
+        binding.viewModel?.navigateToSelectedRestaurant?.observe(viewLifecycleOwner, Observer {
+            if (null != it) {
                 this.findNavController().navigate(
-                    RestaurantDetailFragmentDirections.actionRestaurantDetailFragmentToProductDetailFragment(it,restaurant))
+                    RestaurantDetailFragmentDirections.actionRestaurantDetailFragmentToProductDetailFragment(it)
+                )
                 binding.viewModel?.displayProductDetailsCompleted()
             }
         })
-        binding.viewModel?.addToCartProduct?.observe(this, Observer {
-            if ( null != it ) {
+        binding.viewModel?.addToCartProduct?.observe(viewLifecycleOwner, Observer {
+            if (null != it) {
+
+               val product = ProductInOrder(it, 1)
+                sharedViewModel.addProduct(product)
                 this.findNavController().navigate(
-                    RestaurantDetailFragmentDirections.actionRestaurantDetailFragmentToOrderFragment(it,restaurant))
+                    RestaurantDetailFragmentDirections.actionRestaurantDetailFragmentToOrderFragment()
+                )
                 binding.viewModel?.addProductToCartCompleted()
             }
         })
