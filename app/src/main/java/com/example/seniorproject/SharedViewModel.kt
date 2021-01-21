@@ -28,7 +28,20 @@ class SharedViewModel : ViewModel() {
         get() = _products
 
     fun addProduct(productInOrder: ProductInOrder) {
-        _products.add(productInOrder)
+        var productFound = false
+        for (item in _products){
+            if(productInOrder.product.id == item.product.id){
+                productFound = true
+                if(productInOrder.productCount != item.productCount){
+                    item.productCount = productInOrder.productCount
+                }
+            }
+        }
+        if(!productFound){
+            _products.add(productInOrder)
+        }
+
+      
 
     }
 

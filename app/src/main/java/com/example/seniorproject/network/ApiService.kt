@@ -27,8 +27,8 @@ interface ApiService{
             List<Restaurant>
     @GET("api/restaurant/{id}")
     suspend fun getRestaurant(@Path(value = "id",encoded = false) key:Int):Restaurant
-    @POST("api/orders")
-    suspend fun sendOrder()
+    @POST("api/orders/")
+    suspend fun sendOrder(@Body order:Order):List<Order>
     @POST("api-token-auth/")
     suspend fun login( @Body customer: LoginCustomer):CustomerInfo
     @POST("rest-auth/registration/")

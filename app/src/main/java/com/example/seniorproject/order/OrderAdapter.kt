@@ -7,10 +7,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.databinding.ViewOrderItemBinding
+import com.example.seniorproject.network.Restaurant
 import com.example.seniorproject.network.productDtos.ProductInOrder
+import com.example.seniorproject.overview.RestaurantGridAdapter
 
 
-class OrderAdapter() :ListAdapter<ProductInOrder,
+class OrderAdapter( private val onClickListener: OrderAdapter.OnClickListener) :ListAdapter<ProductInOrder,
         OrderAdapter.OrderViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(
@@ -26,6 +28,9 @@ class OrderAdapter() :ListAdapter<ProductInOrder,
         position: Int
     ) {
         val product = getItem(position)
+        holder.itemView.setOnClickListener{
+            onClickListener.onClick(product)
+        }
         holder.bind(product)
     }
     companion object DiffCallback : DiffUtil.ItemCallback<ProductInOrder>() {
@@ -44,6 +49,9 @@ class OrderAdapter() :ListAdapter<ProductInOrder,
             binding.product = product
             binding.executePendingBindings()
         }
+    }
+    class OnClickListener(val clickListener: (product: ProductInOrder) -> Unit) {
+        fun onClick(restaurant: ProductInOrder) = clickListener(restaurant)
     }
 
 

@@ -33,8 +33,8 @@ class LoginFragment : Fragment() {
         // Giving the binding access to the OverviewViewModel
         binding.viewModel = viewModel
         binding.ButtonLogin.setOnClickListener{
-            val username = binding.UsernameEditText.text.toString().trim()
-            val password = binding.PasswordEditText.text.toString().trim()
+            val username = binding.UsernameEditText.text.toString().toLowerCase().trim()
+            val password = binding.PasswordEditText.text.toString().toLowerCase().trim()
             if (username=="" || password == ""){
                 Toast.makeText(context,"Mail adresinizi veya şifrenizi boş bıraktınız", Toast.LENGTH_LONG).show()
 

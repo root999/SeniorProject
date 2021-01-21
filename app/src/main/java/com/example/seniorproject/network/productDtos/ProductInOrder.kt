@@ -7,5 +7,5 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class ProductInOrder(
     val product:Product,
-    val productCount:Int
+    var productCount:Int
 ):Parcelable

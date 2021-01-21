@@ -10,25 +10,28 @@
             type="com.example.seniorproject.order.OrderViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        >
+       >
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/orderList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="674dp"
+            android:layout_alignParentTop="true"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
+
             app:orderData="@{viewModel.products}"
             tools:listitem="@layout/view_order_item" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Button
+            android:id="@+id/orderButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/orderList"
+            android:text="SIPARIS VER">
+
+        </Button>
+    </RelativeLayout>
 </layout>

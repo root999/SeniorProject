@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.seniorproject.SharedViewModel
 import com.example.seniorproject.databinding.FragmentOrderBinding
 
@@ -36,8 +39,15 @@ class OrderFragment : Fragment() {
         binding.viewModel = viewModel
         val products = sharedViewModel.products
         viewModel.setProducts(products)
-        binding.orderList.adapter = OrderAdapter()
-
+        binding.orderList.adapter = OrderAdapter(OrderAdapter.OnClickListener{
+            viewModel.displayProductDetails(it.product)
+        })
+        viewModel.selectedProduct.observe(viewLifecycleOwner, Observer {
+            if(it != null){
+                this.findNavController().navigate(OrderFragmentDirections.actionOrderFragmentToProductDetailFragment(it))
+                viewModel.displayProductDetailsCompleted()
+            }
+        })
         val restaurant = sharedViewModel.restaurant.value
         val customerInfo = sharedViewModel.customerInfo.value
         if (restaurant != null) {
@@ -47,6 +57,10 @@ class OrderFragment : Fragment() {
             }
         }
 
+        binding.orderButton.setOnClickListener{
+            viewModel.sendOrder(sharedViewModel.order.value!!)
+            Toast.makeText(application,"Siparişiniz alınmıştır",Toast.LENGTH_LONG).show()
+        }
 //        val viewModelFactory = OrderViewModelFactory(product, application)
 //        binding.viewModel =  ViewModelProvider(
 //            this, viewModelFactory).get(OrderViewModel::class.java)
