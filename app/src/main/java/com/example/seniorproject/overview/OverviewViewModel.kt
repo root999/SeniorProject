@@ -1,17 +1,10 @@
 package com.example.seniorproject.overview
 
-import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.seniorproject.network.AppApi
-import com.example.seniorproject.network.CustomerDtos.CustomerInfo
-import com.example.seniorproject.network.Product
 import com.example.seniorproject.network.Restaurant
 import kotlinx.coroutines.launch
-
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 enum class RestaurantStatus { LOADING, ERROR, DONE }
 
@@ -69,5 +62,6 @@ class OverviewViewModel : ViewModel() {
             }
         }
     }
+
 
 }

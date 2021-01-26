@@ -14,7 +14,6 @@ enum class OrderStatus { LOADING, ERROR, DONE }
 class OrderViewModel : ViewModel() {
 
     private val _status = MutableLiveData<OrderStatus>()
-
     val status: LiveData<OrderStatus>
         get() = _status
 
@@ -29,6 +28,13 @@ class OrderViewModel : ViewModel() {
     private val _returnedOrders = MutableLiveData<List<Order>>()
     val returnedOrders: LiveData<List<Order>>
         get() = _returnedOrders
+
+    private val _totalPrice = MutableLiveData<Double>()
+    val totalPrice: LiveData<Double>
+        get() = _totalPrice
+    private val _deleteFromCart = MutableLiveData<ProductInOrder>()
+    val deleteFromCart: LiveData<ProductInOrder>
+        get() = _deleteFromCart
 
     init {
 
@@ -48,7 +54,7 @@ class OrderViewModel : ViewModel() {
 
     }
 
-     fun sendOrder(order: Order) {
+    fun sendOrder(order: Order) {
         viewModelScope.launch {
             _status.value = OrderStatus.LOADING
             try {
@@ -59,6 +65,25 @@ class OrderViewModel : ViewModel() {
                 _status.value = OrderStatus.ERROR
             }
         }
+    }
+
+    fun deleteFromCart(product: ProductInOrder) {
+        _deleteFromCart.value = product
+    }
+
+    fun deleteFromCartCompleted() {
+        _deleteFromCart.value = null
+    }
+
+    fun calculateTotalPrice() {
+        var totalPrice = 0.0
+        for (item in _products.value!!) {
+            totalPrice += (item.productCount * item.product.price)
+        }
+
+        _totalPrice.value = totalPrice
+
+
     }
 
 }

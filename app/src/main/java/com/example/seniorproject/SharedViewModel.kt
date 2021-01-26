@@ -4,10 +4,16 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.seniorproject.network.AppApi
 import com.example.seniorproject.network.CustomerDtos.CustomerInfo
 import com.example.seniorproject.network.Order
+import com.example.seniorproject.network.Product
 import com.example.seniorproject.network.productDtos.ProductInOrder
 import com.example.seniorproject.network.Restaurant
+import com.example.seniorproject.network.responses.Recommendation
+import com.example.seniorproject.network.responses.RecommendationShowDto
+import kotlinx.coroutines.launch
 
 class SharedViewModel : ViewModel() {
 
@@ -26,22 +32,34 @@ class SharedViewModel : ViewModel() {
     private val _products = ArrayList<ProductInOrder>()
     val products: ArrayList<ProductInOrder>
         get() = _products
+    private val _recommendedProducts = ArrayList<Product>()
+    val recommendedProducts: ArrayList<Product>
+        get() = _recommendedProducts
+
+
+    private val _recommendation = RecommendationShowDto()
+    val recommendation: RecommendationShowDto
+        get() = _recommendation
 
     fun addProduct(productInOrder: ProductInOrder) {
         var productFound = false
-        for (item in _products){
-            if(productInOrder.product.id == item.product.id){
+        for (item in _products) {
+            if (productInOrder.product.id == item.product.id) {
                 productFound = true
-                if(productInOrder.productCount != item.productCount){
+                if (productInOrder.productCount != item.productCount) {
                     item.productCount = productInOrder.productCount
                 }
             }
         }
-        if(!productFound){
+        if (!productFound) {
             _products.add(productInOrder)
         }
 
-      
+
+    }
+
+    fun deleteFromCart(productInOrder: ProductInOrder) {
+        _products.remove(productInOrder)
 
     }
 
@@ -67,13 +85,12 @@ class SharedViewModel : ViewModel() {
             "RESTDET addProductToOrder exit customer: ",
             _order.value?.customer?.name + " " + _order.value?.customer?.token
         )
-        for (item:ProductInOrder in (_order.value!!.products) ){
+        for (item: ProductInOrder in (_order.value!!.products)) {
             Log.d(
                 "RESTDET addProductToOrder exit product: ",
                 item.product.name + " " + (item.productCount)
             )
         }
-
 
 
     }
@@ -87,5 +104,88 @@ class SharedViewModel : ViewModel() {
 //        Log.d("RESTDET addProductToOrder exit customer: ", _order.value?.customer?.name+" "+ _order.value?.customer?.token)
 //    }
 
+
+    fun getRecommendationForCustomer() :RecommendationShowDto {
+        var token = "Token " + _customerInfo.value?.token
+        var reco = RecommendationShowDto()
+        viewModelScope.launch {
+            try {
+                var res = AppApi.retrofitService.getRecommendation(token)
+                Log.d("RECOMMENDATION", res.toString())
+                reco = initializeRecommendations(res)
+
+            } catch (e: java.lang.Exception) {
+                Log.d("HATAHATA", e.printStackTrace().toString())
+            }
+        }
+        return reco
+    }
+
+    private fun initializeRecommendations(res: Recommendation):RecommendationShowDto {
+        var recommendedProducts = ArrayList<Product>()
+        var isSoupRecommendationSet = false
+        var isMainDishRecommendationSet = false
+        var isSecondDishRecommendationSet = false
+        var isDesertRecommendationSet = false
+        for (item in _restaurant.value?.menu?.products!!) {
+            for (rec in res.rec) {
+                if (rec[0] == item.name) {
+                    recommendedProducts.add(item)
+                }
+            }
+        }
+        var max_iter = recommendedProducts.size
+        Log.d("RECOMMENDATION2", recommendedProducts.toString())
+        var iterCount = 0
+        var reco = RecommendationShowDto()
+        while ((!isDesertRecommendationSet or !isMainDishRecommendationSet or !isSecondDishRecommendationSet
+                    or !isDesertRecommendationSet) and (iterCount <= max_iter)
+        ) {
+            val randomInt = (0 until recommendedProducts.size).random()
+            val product = recommendedProducts[randomInt]
+            when (product.category) {
+                "Çorba" -> {
+                    if (!isSoupRecommendationSet) {
+//                        _recommendedProducts.add(product)
+                        _recommendation.soup = product
+                        reco.soup=product
+                        isSoupRecommendationSet = true
+                    }
+                }
+                "Ana Yemek" -> {
+                    if (!isMainDishRecommendationSet) {
+//                        _recommendedProducts.add(product)
+                        _recommendation.mainDish = product
+                        reco.mainDish=product
+                        isMainDishRecommendationSet = true
+                    }
+
+                }
+                "Yardımcı Yemek" -> {
+                    if (!isSecondDishRecommendationSet) {
+//                        _recommendedProducts.add(product)
+                        _recommendation.secondDish = product
+                        reco.secondDish=product
+                        isSecondDishRecommendationSet = true
+                    }
+
+                }
+                "Tatlı ve İçecek" -> {
+                    if (!isDesertRecommendationSet) {
+//                        _recommendedProducts.add(product)
+                        _recommendation.desertOrDrink = product
+                        reco.desertOrDrink = product
+                        isDesertRecommendationSet = true
+                    }
+
+                }
+                else -> {
+
+                }
+            }
+            iterCount++
+        }
+        return reco
+    }
 
 }
