@@ -26,7 +26,7 @@ private val retrofit = Retrofit.Builder()
     .build()
 
 interface ApiService{
-    @GET("api/restaurants")
+    @GET("api/restaurants/")
     suspend fun getRestaurants():
             List<Restaurant>
     @GET("api/restaurant/{id}")
@@ -37,7 +37,7 @@ interface ApiService{
     suspend fun login(@Body customer: LoginCustomer):CustomerInfo
     @POST("rest-auth/registration/")
     suspend fun register(@Body customer : RegisterCustomer):RegisterResponse
-    @GET("recommendation")
+    @GET("recommendation/")
     suspend fun getRecommendation(@Header("Authorization") auth:String):Recommendation
 }
 object AppApi {

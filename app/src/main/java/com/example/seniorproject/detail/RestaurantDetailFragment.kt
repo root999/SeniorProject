@@ -59,6 +59,9 @@ class RestaurantDetailFragment : Fragment() {
                 binding.viewModel?.addProductToCart(it)
             })
         sharedViewModel.getRecommendationForCustomer()
+        sharedViewModel.recommendation.observe(viewLifecycleOwner, Observer {
+            showAlertDialogButtonClicked(it)
+        })
 
         binding.viewModel?.navigateToSelectedRestaurant?.observe(viewLifecycleOwner, Observer {
             if (null != it) {
@@ -83,7 +86,7 @@ class RestaurantDetailFragment : Fragment() {
         })
         return binding.root
     }
-    fun showAlertDialogButtonClicked() {
+    fun showAlertDialogButtonClicked(recommendation: RecommendationShowDto) {
         // create an alert builder
         val builder: AlertDialog.Builder = AlertDialog.Builder(context)
         builder.setTitle("Name")
@@ -94,10 +97,10 @@ class RestaurantDetailFragment : Fragment() {
         val mainDishText = customLayout.findViewById<TextView>(R.id.mainDishTextView)
         val secondDishText = customLayout.findViewById<TextView>(R.id.secondDishTextView)
         val desertOrDrinkText = customLayout.findViewById<TextView>(R.id.desertorDrinkTextView)
-        soupText.text =sharedViewModel.recommendation.soup?.name
-        mainDishText.text =sharedViewModel.recommendation.mainDish?.name
-        secondDishText.text =sharedViewModel.recommendation.secondDish?.name
-        desertOrDrinkText.text =sharedViewModel.recommendation.desertOrDrink?.name
+        soupText.text =recommendation.soup?.name
+        mainDishText.text =recommendation.mainDish?.name
+        secondDishText.text =recommendation.secondDish?.name
+        desertOrDrinkText.text =recommendation.desertOrDrink?.name
         builder.setPositiveButton(
             "OK",
             DialogInterface.OnClickListener { dialog, which -> // send data from the AlertDialog to the Activity

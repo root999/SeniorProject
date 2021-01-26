@@ -32,13 +32,14 @@ class SharedViewModel : ViewModel() {
     private val _products = ArrayList<ProductInOrder>()
     val products: ArrayList<ProductInOrder>
         get() = _products
+
     private val _recommendedProducts = ArrayList<Product>()
     val recommendedProducts: ArrayList<Product>
         get() = _recommendedProducts
 
 
-    private val _recommendation = RecommendationShowDto()
-    val recommendation: RecommendationShowDto
+    private val _recommendation = MutableLiveData<RecommendationShowDto>()
+    val recommendation: LiveData<RecommendationShowDto>
         get() = _recommendation
 
     fun addProduct(productInOrder: ProductInOrder) {
@@ -105,23 +106,22 @@ class SharedViewModel : ViewModel() {
 //    }
 
 
-    fun getRecommendationForCustomer() :RecommendationShowDto {
+    fun getRecommendationForCustomer()  {
         var token = "Token " + _customerInfo.value?.token
-        var reco = RecommendationShowDto()
         viewModelScope.launch {
             try {
                 var res = AppApi.retrofitService.getRecommendation(token)
                 Log.d("RECOMMENDATION", res.toString())
-                reco = initializeRecommendations(res)
+                initializeRecommendations(res)
 
             } catch (e: java.lang.Exception) {
                 Log.d("HATAHATA", e.printStackTrace().toString())
             }
         }
-        return reco
+
     }
 
-    private fun initializeRecommendations(res: Recommendation):RecommendationShowDto {
+    private fun initializeRecommendations(res: Recommendation) {
         var recommendedProducts = ArrayList<Product>()
         var isSoupRecommendationSet = false
         var isMainDishRecommendationSet = false
@@ -134,10 +134,10 @@ class SharedViewModel : ViewModel() {
                 }
             }
         }
+        var reco = RecommendationShowDto()
         var max_iter = recommendedProducts.size
         Log.d("RECOMMENDATION2", recommendedProducts.toString())
         var iterCount = 0
-        var reco = RecommendationShowDto()
         while ((!isDesertRecommendationSet or !isMainDishRecommendationSet or !isSecondDishRecommendationSet
                     or !isDesertRecommendationSet) and (iterCount <= max_iter)
         ) {
@@ -147,16 +147,16 @@ class SharedViewModel : ViewModel() {
                 "Çorba" -> {
                     if (!isSoupRecommendationSet) {
 //                        _recommendedProducts.add(product)
-                        _recommendation.soup = product
-                        reco.soup=product
+                        reco.soup = product
+
                         isSoupRecommendationSet = true
                     }
                 }
                 "Ana Yemek" -> {
                     if (!isMainDishRecommendationSet) {
 //                        _recommendedProducts.add(product)
-                        _recommendation.mainDish = product
-                        reco.mainDish=product
+                        reco.mainDish = product
+
                         isMainDishRecommendationSet = true
                     }
 
@@ -164,8 +164,8 @@ class SharedViewModel : ViewModel() {
                 "Yardımcı Yemek" -> {
                     if (!isSecondDishRecommendationSet) {
 //                        _recommendedProducts.add(product)
-                        _recommendation.secondDish = product
-                        reco.secondDish=product
+                        reco.secondDish = product
+
                         isSecondDishRecommendationSet = true
                     }
 
@@ -173,8 +173,8 @@ class SharedViewModel : ViewModel() {
                 "Tatlı ve İçecek" -> {
                     if (!isDesertRecommendationSet) {
 //                        _recommendedProducts.add(product)
-                        _recommendation.desertOrDrink = product
                         reco.desertOrDrink = product
+
                         isDesertRecommendationSet = true
                     }
 
@@ -185,7 +185,8 @@ class SharedViewModel : ViewModel() {
             }
             iterCount++
         }
-        return reco
+        _recommendation.value = reco
     }
+
 
 }
