@@ -10,21 +10,81 @@
             type="com.example.seniorproject.order.OrderViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+       >
 
-        <TextView
-            android:id="@+id/textView2"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/orderList"
+            android:layout_width="401dp"
+            android:layout_height="410dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="10dp"
+
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:orderData="@{viewModel.products}"
+            tools:listitem="@layout/view_order_item" />
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="272dp"
-            android:layout_marginBottom="440dp"
-            android:text="@{viewModel.selectedProduct.name}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:orientation="horizontal"
+            android:id="@+id/PriceLayout"
+            android:layout_below="@+id/orderList"
+          android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Toplam Ücret:"
+                android:textSize="30sp"
+               />
+
+            <TextView
+                android:layout_width="64dp"
+                android:layout_height="match_parent"
+                android:text="@{Double.toString(viewModel.totalPrice)}"
+                android:textSize="30sp"
+                tools:text="30" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="30sp"
+                android:text="TL"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/pickerLayout"
+            android:layout_below="@+id/PriceLayout">
+
+            <Button
+                android:id="@+id/datepicker"
+
+                android:layout_width="208dp"
+                android:layout_height="match_parent"
+                android:text="Restaurant'a varış gününüzü seçin" />
+            <Button
+                android:id="@+id/timepicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Restaurant'a varış saatinizi seçin"
+                />
+
+        </LinearLayout>
+        <Button
+            android:id="@+id/orderButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/pickerLayout"
+            android:text="SIPARIS VER">
+
+        </Button>
+    </RelativeLayout>
 </layout>

@@ -10,14 +10,14 @@ import com.example.seniorproject.network.Restaurant
 /**
  * Simple ViewModel factory that provides the MarsProperty and context to the ViewModel.
  */
-class OrderViewModelFactory(
-    private val product: Product,
-    private val application: Application) : ViewModelProvider.Factory {
-    @Suppress("unchecked_cast")
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(OrderViewModel::class.java)) {
-            return OrderViewModel(product, application) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
-}
+//class OrderViewModelFactory(
+//    private val product: Product,
+//    private val application: Application) : ViewModelProvider.Factory {
+//    @Suppress("unchecked_cast")
+//    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+//        if (modelClass.isAssignableFrom(OrderViewModel::class.java)) {
+//            return OrderViewModel(product, application) as T
+//        }
+//        throw IllegalArgumentException("Unknown ViewModel class")
+//    }
+//}

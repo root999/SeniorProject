@@ -1,17 +1,10 @@
 package com.example.seniorproject.overview
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.seniorproject.network.AppApi
 import com.example.seniorproject.network.Restaurant
 import kotlinx.coroutines.launch
-
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 enum class RestaurantStatus { LOADING, ERROR, DONE }
 
@@ -20,17 +13,14 @@ enum class RestaurantStatus { LOADING, ERROR, DONE }
  */
 class OverviewViewModel : ViewModel() {
 
-
+//    private val _customer = MutableLiveData<CustomerInfo>()
+//    val customer: LiveData<CustomerInfo>
+//        get() = _customer
     private val _restaurants = MutableLiveData<List<Restaurant>>()
 
 
     val restaurants: LiveData<List<Restaurant>>
         get() = _restaurants
-
-    private val _restaurant = MutableLiveData<Restaurant>()
-
-    val restaurant: LiveData<Restaurant>
-        get() = _restaurant
 
     private val _status = MutableLiveData<RestaurantStatus>()
 
@@ -44,6 +34,7 @@ class OverviewViewModel : ViewModel() {
     fun displayRestaurantDetails(restaurant: Restaurant) {
         _navigateToSelectedRestaurant.value = restaurant
     }
+
     fun displayRestaurantDetailsCompleted() {
         _navigateToSelectedRestaurant.value = null
     }
@@ -52,6 +43,7 @@ class OverviewViewModel : ViewModel() {
      * Call getMarsRealEstateProperties() on init so we can display status immediately.
      */
     init {
+//        _customer.value = customerInfo
         getRestaurantList()
     }
 
@@ -70,5 +62,6 @@ class OverviewViewModel : ViewModel() {
             }
         }
     }
+
 
 }

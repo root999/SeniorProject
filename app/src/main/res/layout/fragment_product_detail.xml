@@ -1,40 +1,146 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.seniorproject.MainActivity">
+
     <data>
+
         <variable
             name="viewModel"
             type="com.example.seniorproject.productDetail.ProductDetailViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent">
-
-
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="212dp"
-            android:layout_height="219dp"
-            android:layout_marginTop="16dp"
-            android:src="@drawable/ic_launcher_background"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/textView"
-            android:layout_width="0dp"
+            android:id="@+id/productNameTextView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="27dp"
+            android:layout_alignParentTop="true"
+            android:layout_margin="20dp"
             android:text="@{viewModel.selectedProduct.name}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:textSize="20sp"
+            tools:text="Mercimek Çorbası" />
+
+        <ImageView
+            android:id="@+id/orderProductImage"
+            android:layout_width="229dp"
+            android:layout_height="219dp"
+            android:layout_below="@+id/productNameTextView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="-6dp"
+            android:layout_marginEnd="7dp"
+            app:imageUrl="@{viewModel.selectedProduct.photoUrl}"
+            app:srcCompat="@drawable/ic_launcher_background"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/productDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/orderProductImage"
+            android:layout_margin="20dp"
+            android:text="@{viewModel.selectedProduct.details}"
+            tools:text="Harika bir çorba" />
+
+
+        <LinearLayout
+            android:id="@+id/ProductCountLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/productDetails"
+            android:layout_margin="20dp"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/productCountDown"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_below="@id/productDetails"
+                android:src="@drawable/ic_baseline_remove_24" />
+
+            <TextView
+                android:id="@+id/productCountNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:padding="10dp"
+                android:text="@{Integer.toString(viewModel.productCount)}"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/productCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:padding="10dp"
+                android:text="Adet"
+                android:textSize="22sp" />
+
+            <ImageButton
+                android:id="@+id/productCountUp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_below="@id/productDetails"
+                android:src="@drawable/ic_baseline_add_24" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/priceLayout"
+            android:layout_width="371dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ProductCountLayout"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/priceText"
+                android:layout_width="95dp"
+                android:layout_height="42dp"
+                android:layout_margin="18dp"
+                android:text="Fiyat:"
+                android:textSize="20sp"
+                android:textStyle="italic"
+                tools:text="Fiyat" />
+
+            <TextView
+                android:id="@+id/productPriceTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18dp"
+                android:layout_marginTop="18dp"
+                android:text="@{Double.toString(viewModel.selectedProduct.price)}"
+                android:textSize="20sp"
+                android:textStyle="italic"
+                tools:text="Fiyat" />
+
+            <TextView
+                android:id="@+id/pricetext2"
+                android:layout_width="63dp"
+                android:layout_height="51dp"
+                android:layout_marginTop="18dp"
+                android:text="TL"
+                android:textAlignment="viewStart"
+                android:textSize="20sp"
+                android:textStyle="italic"
+                tools:text="Fiyat" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/addToCartButton"
+            android:layout_below="@+id/priceLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:text="Sepete Ekle" />
+
+    </RelativeLayout>
 </layout>

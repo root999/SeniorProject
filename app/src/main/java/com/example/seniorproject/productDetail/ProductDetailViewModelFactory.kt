@@ -16,7 +16,7 @@ class ProductDetailViewModelFactory(
     @Suppress("unchecked_cast")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ProductDetailViewModel::class.java)) {
-            return ProductDetailViewModel(product, application) as T
+            return ProductDetailViewModel(product,application) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
