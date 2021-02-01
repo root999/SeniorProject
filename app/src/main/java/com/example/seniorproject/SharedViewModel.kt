@@ -37,11 +37,17 @@ class SharedViewModel : ViewModel() {
     val recommendedProducts: ArrayList<Product>
         get() = _recommendedProducts
 
+//    private val _recommendation : MutableLiveData<RecommendationShowDto>()
+//    val recommendation: LiveData<RecommendationShowDto>
+//        get() = _recommendation
 
-    private val _recommendation = MutableLiveData<RecommendationShowDto>()
-    val recommendation: LiveData<RecommendationShowDto>
+    private var _recommendation : RecommendationShowDto? = RecommendationShowDto()
+    val recommendation: RecommendationShowDto?
         get() = _recommendation
 
+    fun displayRecommendationCompleted(){
+        _recommendation = null
+    }
     fun addProduct(productInOrder: ProductInOrder) {
         var productFound = false
         for (item in _products) {
@@ -185,7 +191,9 @@ class SharedViewModel : ViewModel() {
             }
             iterCount++
         }
-        _recommendation.value = reco
+
+        _recommendation = reco
+
     }
 
 

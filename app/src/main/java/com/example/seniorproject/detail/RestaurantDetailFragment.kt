@@ -6,6 +6,7 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -58,11 +59,13 @@ class RestaurantDetailFragment : Fragment() {
             }, ProductListAdapter.OnClickAddToCartListener {
                 binding.viewModel?.addProductToCart(it)
             })
+        showAlertDialogQuestion()
         sharedViewModel.getRecommendationForCustomer()
-        sharedViewModel.recommendation.observe(viewLifecycleOwner, Observer {
-
-            showAlertDialogButtonClicked(it)
-        })
+ //       sharedViewModel.getRecommendationForCustomer()
+//        sharedViewModel.recommendation.observe(viewLifecycleOwner, Observer {
+//
+//            showAlertDialogButtonClicked(it)
+//        })
 
         binding.viewModel?.navigateToSelectedRestaurant?.observe(viewLifecycleOwner, Observer {
             if (null != it) {
@@ -87,6 +90,41 @@ class RestaurantDetailFragment : Fragment() {
         })
         return binding.root
     }
+    fun showAlertDialogQuestion(){
+        val builder: AlertDialog.Builder = AlertDialog.Builder(context)
+        val colorCode = "#673AB7"
+        val textView = TextView(context)
+        textView.text = "Size özel önerimizi görmek ister misiniz ?"
+        textView.setPadding(20, 30, 20, 30)
+        textView.textSize = 20f
+        textView.setBackgroundColor(Color.parseColor(colorCode))
+        textView.setTextColor(Color.BLACK)
+        builder.setCustomTitle(textView)
+            .setPositiveButton("Evet") { dialog, which ->
+                Toast.makeText(context,"Evet butonu tıklandı",Toast.LENGTH_SHORT).show()
+
+                if(sharedViewModel.recommendation != null){
+                    showAlertDialogButtonClicked(sharedViewModel.recommendation!!)
+                    sharedViewModel.displayRecommendationCompleted()
+                }
+//                sharedViewModel.recommendation.observe(viewLifecycleOwner, Observer {
+//                    Log.d("DENEME1",it.toString())
+//                    showAlertDialogButtonClicked(it)
+//                    Log.d("DENEME2",sharedViewModel.recommendation.value.toString())
+//                    //sharedViewModel.displayRecommendationCompleted()
+//                    Log.d("DENEME3",sharedViewModel.recommendation.value.toString())
+//
+//                })
+            }
+            .setNegativeButton("Hayır"){
+                    dialog, which ->
+                Toast.makeText(context,"Hayır butonu tıklandı",Toast.LENGTH_SHORT).show()
+
+            }
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+    }
+
     fun showAlertDialogButtonClicked(recommendation: RecommendationShowDto) {
         // create an alert builder
         val builder: AlertDialog.Builder = AlertDialog.Builder(context)
@@ -149,8 +187,12 @@ class RestaurantDetailFragment : Fragment() {
                     val product = ProductInOrder(recommendation.desertOrDrink!!, 1)
                     sharedViewModel.addProduct(product)
                 }
+                dialog.dismiss()
             })
-        // create and show the alert dialog
+            .setNegativeButton("İstemiyorum") { dialog, which ->
+                dialog.dismiss()
+            }
+            // create and show the alert dialog
         val dialog: AlertDialog = builder.create()
         dialog.show()
     }

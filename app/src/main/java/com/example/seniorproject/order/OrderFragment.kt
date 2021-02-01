@@ -76,7 +76,7 @@ class OrderFragment : Fragment(),DatePickerDialog.OnDateSetListener,TimePickerDi
             if (null != it) {
                 sharedViewModel.deleteFromCart(it)
                 viewModel.setProducts(sharedViewModel.products)
-                Toast.makeText(context,"Ürün listeden çıkarıldı",Toast.LENGTH_SHORT).show()
+                //Toast.makeText(context,"Ürün listeden çıkarıldı",Toast.LENGTH_SHORT).show()
                 binding.viewModel?.deleteFromCartCompleted()
             }
         })
@@ -98,21 +98,27 @@ class OrderFragment : Fragment(),DatePickerDialog.OnDateSetListener,TimePickerDi
         binding.orderButton.setOnClickListener{
             val restaurant = sharedViewModel.restaurant.value
             val customerInfo = sharedViewModel.customerInfo.value
-            if (restaurant != null) {
-                if (customerInfo != null) {
-                    if (isDateSet and isTimeSet){
-                        val order = Order(customerInfo, restaurant, products,this.plannedDate,this.plannedTime)
-                        sharedViewModel.setOrder(order)
-                        viewModel.sendOrder(sharedViewModel.order.value!!)
-                        Toast.makeText(application, "Siparişiniz alınmıştır", Toast.LENGTH_LONG).show()
-                    }
-                    else{
-                        Toast.makeText(context,"Lütfen restauranta gideceğiniz günü ve saati seçin",Toast.LENGTH_SHORT)
-                            .show()
-                    }
+            if(products.size != 0){
+                if (restaurant != null) {
+                    if (customerInfo != null) {
+                        if (isDateSet and isTimeSet){
+                            val order = Order(customerInfo, restaurant, products,this.plannedDate,this.plannedTime)
+                            sharedViewModel.setOrder(order)
+                            viewModel.sendOrder(sharedViewModel.order.value!!)
+                            Toast.makeText(application, "Siparişiniz alınmıştır", Toast.LENGTH_LONG).show()
+                        }
+                        else{
+                            Toast.makeText(context,"Lütfen restauranta gideceğiniz günü ve saati seçin",Toast.LENGTH_SHORT)
+                                .show()
+                        }
 
+                    }
                 }
             }
+            else{
+                Toast.makeText(context,"Lütfen sipariş vereceğiniz ürünleri seçin",Toast.LENGTH_SHORT).show()
+            }
+
 
 
         }

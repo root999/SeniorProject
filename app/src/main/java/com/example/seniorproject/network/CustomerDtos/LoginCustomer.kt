@@ -5,4 +5,5 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class LoginCustomer( val username:String,
-                          val password:String):Parcelable
+                          val password:String
+                        ):Parcelable
