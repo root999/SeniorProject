@@ -1,12 +1,14 @@
 package com.example.seniorproject.order
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.*
 import com.example.seniorproject.network.AppApi
 import com.example.seniorproject.network.Order
 import com.example.seniorproject.network.Product
 import com.example.seniorproject.network.Restaurant
 import com.example.seniorproject.network.productDtos.ProductInOrder
+import com.example.seniorproject.network.responses.OrderResponse
 import com.example.seniorproject.overview.RestaurantStatus
 import kotlinx.coroutines.launch
 
@@ -16,7 +18,12 @@ class OrderViewModel : ViewModel() {
     private val _status = MutableLiveData<OrderStatus>()
     val status: LiveData<OrderStatus>
         get() = _status
-
+    private val _orderStatus = MutableLiveData<String>()
+    val orderStatus: LiveData<String>
+        get() = _orderStatus
+    private val _detail = MutableLiveData<String>()
+    val detail: LiveData<String>
+        get() = _detail
     private val _products = MutableLiveData<List<ProductInOrder>>()
     val products: LiveData<List<ProductInOrder>>
         get() = _products
@@ -25,8 +32,8 @@ class OrderViewModel : ViewModel() {
     val selectedProduct: LiveData<Product>
         get() = _selectedProduct
 
-    private val _returnedOrders = MutableLiveData<List<Order>>()
-    val returnedOrders: LiveData<List<Order>>
+    private val _returnedOrders = MutableLiveData<OrderResponse>()
+    val returnedOrders: LiveData<OrderResponse>
         get() = _returnedOrders
 
     private val _totalPrice = MutableLiveData<Double>()
@@ -59,9 +66,11 @@ class OrderViewModel : ViewModel() {
             _status.value = OrderStatus.LOADING
             try {
                 _returnedOrders.value = AppApi.retrofitService.sendOrder(order)
+                _orderStatus.value =_returnedOrders!!.value!!.status
+                _detail.value = _returnedOrders!!.value!!.detail
                 _status.value = OrderStatus.DONE
             } catch (e: Exception) {
-                _returnedOrders.value = ArrayList()
+                _returnedOrders.value = null
                 _status.value = OrderStatus.ERROR
             }
         }

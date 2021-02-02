@@ -3,6 +3,7 @@ package com.example.seniorproject.network
 import com.example.seniorproject.network.CustomerDtos.CustomerInfo
 import com.example.seniorproject.network.CustomerDtos.LoginCustomer
 import com.example.seniorproject.network.CustomerDtos.RegisterCustomer
+import com.example.seniorproject.network.responses.OrderResponse
 import com.example.seniorproject.network.responses.Recommendation
 import com.example.seniorproject.network.responses.RegisterResponse
 import com.squareup.moshi.Json
@@ -32,7 +33,7 @@ interface ApiService{
     @GET("api/restaurant/{id}")
     suspend fun getRestaurant(@Path(value = "id",encoded = false) key:Int):Restaurant
     @POST("api/orders/")
-    suspend fun sendOrder(@Body order:Order):List<Order>
+    suspend fun sendOrder(@Body order:Order):OrderResponse
     @POST("api-token-auth/")
     suspend fun login(@Body customer: LoginCustomer):CustomerInfo
     @POST("rest-auth/registration/")

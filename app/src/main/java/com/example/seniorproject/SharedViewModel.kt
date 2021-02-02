@@ -84,14 +84,6 @@ class SharedViewModel : ViewModel() {
             order.products.get(0).product.name + " " + order.products.get(0).productCount
         )
         _order.value = order
-        Log.d(
-            "RESTDET addProductToOrder exit restaurant: ",
-            _order.value?.restaurant?.name + " " + _order.value?.restaurant?.address
-        )
-        Log.d(
-            "RESTDET addProductToOrder exit customer: ",
-            _order.value?.customer?.name + " " + _order.value?.customer?.token
-        )
         for (item: ProductInOrder in (_order.value!!.products)) {
             Log.d(
                 "RESTDET addProductToOrder exit product: ",

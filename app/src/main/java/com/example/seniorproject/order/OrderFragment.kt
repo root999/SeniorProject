@@ -18,7 +18,9 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.seniorproject.SharedViewModel
 import com.example.seniorproject.databinding.FragmentOrderBinding
 import com.example.seniorproject.detail.*
+import com.example.seniorproject.network.CustomerDtos.CustomerOrder
 import com.example.seniorproject.network.Order
+import com.example.seniorproject.network.RestaurantDtos.RestaurantOrder
 import com.example.seniorproject.network.productDtos.ProductInOrder
 import java.sql.Time
 import java.util.*
@@ -80,6 +82,7 @@ class OrderFragment : Fragment(),DatePickerDialog.OnDateSetListener,TimePickerDi
                 binding.viewModel?.deleteFromCartCompleted()
             }
         })
+
         binding.datepicker.setOnClickListener{
             val calendar: Calendar = Calendar.getInstance()
             val year = calendar.get(Calendar.YEAR)
@@ -98,14 +101,15 @@ class OrderFragment : Fragment(),DatePickerDialog.OnDateSetListener,TimePickerDi
         binding.orderButton.setOnClickListener{
             val restaurant = sharedViewModel.restaurant.value
             val customerInfo = sharedViewModel.customerInfo.value
+            val restaurantOrder = RestaurantOrder(restaurant!!.id,restaurant!!.name)
+            val CustomerOrder = CustomerOrder(customerInfo!!.user_id,customerInfo.name,customerInfo.surname)
             if(products.size != 0){
                 if (restaurant != null) {
                     if (customerInfo != null) {
                         if (isDateSet and isTimeSet){
-                            val order = Order(customerInfo, restaurant, products,this.plannedDate,this.plannedTime)
+                            val order = Order(CustomerOrder, restaurantOrder, products,this.plannedDate,this.plannedTime)
                             sharedViewModel.setOrder(order)
                             viewModel.sendOrder(sharedViewModel.order.value!!)
-                            Toast.makeText(application, "Siparişiniz alınmıştır", Toast.LENGTH_LONG).show()
                         }
                         else{
                             Toast.makeText(context,"Lütfen restauranta gideceğiniz günü ve saati seçin",Toast.LENGTH_SHORT)
@@ -122,6 +126,16 @@ class OrderFragment : Fragment(),DatePickerDialog.OnDateSetListener,TimePickerDi
 
 
         }
+        viewModel.orderStatus.observe(viewLifecycleOwner, Observer {
+            if(it == "Canceled"){
+                viewModel.detail.observe(viewLifecycleOwner, Observer {
+                    Toast.makeText(context, "$it",Toast.LENGTH_SHORT).show()
+                })
+            }
+            else{
+                Toast.makeText(application, "Siparişiniz alınmıştır", Toast.LENGTH_SHORT).show()
+            }
+        })
 //        val viewModelFactory = OrderViewModelFactory(product, application)
 //        binding.viewModel =  ViewModelProvider(
 //            this, viewModelFactory).get(OrderViewModel::class.java)
